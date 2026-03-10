@@ -6,6 +6,8 @@ import SignUpForm from './components/SignUpForm/SignUpForm'
 import SignInForm from './components/SignInForm/SignInForm'
 import Landing from './components/Landing/Landing'
 import Dashboard from './components/Dashboard/Dashboard'
+import UsersList from './components/Users/UserList'
+import UserProfile from './components/Users/UserProfile'
 import { UserContext } from './context/UserContext'
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Route path='/' element={user ? <Dashboard /> : <Landing />} />
         <Route path='/sign-up' element={<SignUpForm />} />
         <Route path='/sign-in' element={<SignInForm />} />
+        <Route path='/users' element={<UsersList />} />
+        <Route path='/users/:userId' element={<UserProfile />} />
       </Routes>
     </>
   )
