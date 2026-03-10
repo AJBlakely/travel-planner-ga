@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000
 const testJwtRouter = require('./controllers/test-jwt')
 const authRouter = require('./controllers/auth')
 const userRouter = require('./controllers/users')
+const tripsRouter = require('./controllers/trips')
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -25,8 +26,8 @@ app.use(logger('dev'));
 app.use('/test-jwt', testJwtRouter)
 app.use('/auth', authRouter)
 app.use('/users', userRouter)
+app.use('/trips', tripsRouter)
 
-console.log(process.env.JWT_SECRET)
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);

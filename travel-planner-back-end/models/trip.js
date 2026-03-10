@@ -51,6 +51,6 @@ tripSchema.set('toJSON', {
     }
 });
 
-const trip = mongoose.model('Trip', tripSchema)
+const Trip = mongoose.model('Trip', tripSchema)
 
 module.exports = Trip

@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     }
-})
+}, { timestamps: true })
 
 userSchema.set('toJSON', { transform: (document, returnedObject) => {
     delete returnedObject.password
