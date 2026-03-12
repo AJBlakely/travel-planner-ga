@@ -23,9 +23,9 @@ const Dashboard = () => {
     ))
 
     return (
-        <main>
+        <main className='dashboard'>
             <h1>Welcome, {user.username}</h1>
-            <ul>
+            <ul className='dashboard-list'>
                 {mappedUsers}
             </ul>
         </main>

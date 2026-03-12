@@ -8,6 +8,9 @@ import Landing from './components/Landing/Landing'
 import Dashboard from './components/Dashboard/Dashboard'
 import UsersList from './components/Users/UserList'
 import UserProfile from './components/Users/UserProfile'
+import TripForm from './components/Trips/TripForm'
+import TripsIndex from './components/Trips/TripsIndex'
+import TripShow from './components/Trips/TripShow'
 import { UserContext } from './context/UserContext'
 
 function App() {
@@ -22,6 +25,9 @@ function App() {
         <Route path='/sign-in' element={<SignInForm />} />
         <Route path='/users' element={<UsersList />} />
         <Route path='/users/:userId' element={<UserProfile />} />
+        <Route path='/trips' element={<TripsIndex />} />
+        <Route path='/trips/new' element={<TripForm />} />
+        <Route path='/trips/:tripId' element={<TripShow />} />
       </Routes>
     </>
   )

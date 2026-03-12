@@ -32,28 +32,28 @@ const UsersList = () => {
     //  there is no logged-in user
     if (!user) {
         return (
-            <main>
-                <h1>Users</h1>
-                <p>You need to be signed in to view the list of users.</p>
-            </main>
+        <main className='dashboard'>
+            <h1>Users</h1>
+            <p>You need to be signed in to view the list of users.</p>
+        </main>
         )
     }
 
     if (isLoading) {
         return (
-            <main>
-                <h1>Users</h1>
-                <p>Loading users...</p>
-            </main>
+        <main className='dashboard'>
+            <h1>Users</h1>
+            <p>Loading users...</p>
+        </main>
         )
     }
 
     if (error) {
         return (
-            <main>
-                <h1>Users</h1>
-                <p>{error}</p>
-            </main>
+        <main className='dashboard'>
+            <h1>Users</h1>
+            <p>{error}</p>
+        </main>
         )
     }
 
@@ -65,10 +65,10 @@ const UsersList = () => {
     ))
 
     return (
-        <main>
+        <main className='dashboard'>
             <h1>Users</h1>
             <p>Select a user to view their profile.</p>
-            <ul>
+            <ul className='dashboard-list'>
                 {mappedUsers}
             </ul>
         </main>

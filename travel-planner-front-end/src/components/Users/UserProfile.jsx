@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { useParams } from 'react-router'
 import { UserContext } from '../../context/UserContext'
 import * as userService from '../../services/userService'
@@ -37,7 +38,7 @@ const UserProfile = () => {
 
     if (!user) {
         return (
-            <main>
+            <main className='dashboard'>
                 <h1>User Profile</h1>
                 <p>You need to be signed in to view profiles.</p>
             </main>
@@ -46,7 +47,7 @@ const UserProfile = () => {
 
     if (isLoading) {
         return (
-            <main>
+            <main className='dashboard'>
                 <h1>User Profile</h1>
                 <p>Loading profile...</p>
             </main>
@@ -55,7 +56,7 @@ const UserProfile = () => {
 
     if (error) {
         return (
-            <main>
+            <main className='dashboard'>
                 <h1>User Profile</h1>
                 <p>{error}</p>
             </main>
@@ -64,25 +65,34 @@ const UserProfile = () => {
 
     if (!profile) {
         return (
-            <main>
+            <main className='dashboard'>
                 <h1>User Profile</h1>
                 <p>Profile not found.</p>
             </main>
         )
     }
 
-    const mappedTrips = trips.map((trip) => (
-        <li key={trip._id}>
-            <strong>{trip.location}</strong>{' '}
+    const mappedTrips = trips.map((trip) => {
+        const tripId = trip._id || trip.id
+        return (
+            <li key={tripId || trip.location}>
+                <strong>
+                    {tripId ? (
+                        <Link to={`/trips/${tripId}`}>{trip.location}</Link>
+                    ) : (
+                        trip.location
+                    )}
+                </strong>{' '}
             <span>
                 ({new Date(trip.startDate).toLocaleDateString()} -{' '}
                 {new Date(trip.endDate).toLocaleDateString()})
             </span>
-        </li>
-    ))
+            </li>
+        )
+    })
 
     return (
-        <main>
+        <main className='dashboard'>
             <h1>{profile.username}'s Profile</h1>
             <section>
                 <p>User since: {profile.createdAt ? new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '—'}</p>
@@ -93,7 +103,7 @@ const UserProfile = () => {
                 {trips.length === 0 ? (
                     <p>No trips found for this user.</p>
                 ) : (
-                    <ul>
+                    <ul className='dashboard-list'>
                         {mappedTrips}
                     </ul>
                 )}

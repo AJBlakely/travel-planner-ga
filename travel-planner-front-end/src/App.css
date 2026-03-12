@@ -5,6 +5,34 @@
   text-align: center;
 }
 
+.dashboard {
+  text-align: left;
+}
+
+.dashboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  background: inherit;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
