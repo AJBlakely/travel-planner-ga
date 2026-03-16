@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import { useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 
@@ -14,18 +14,17 @@ const NavBar = () => {
         <nav>
             { user ? (
                 <ul>
-                    <li>Welcome, {user.username} </li>
-                    <li><Link to='/'>Dashboard</Link></li>
-                    <li><Link to='/trips'>My Trips</Link></li>
-                    <li><Link to='/trips/new'>Add Trip</Link></li>
-                    <li><Link to='/users'>Users</Link></li>
+                    <li><NavLink to='/' end>Feed</NavLink></li>
+                    <li><NavLink to='/trips' end>My Trips</NavLink></li>
+                    <li><NavLink to='/trips/new'>Add Trip</NavLink></li>
+                    <li><NavLink to='/users'>Users</NavLink></li>
                     <li><Link to='/' onClick={handleSignOut}>Sign Out</Link></li>
                 </ul>
             ) : (
                 <ul>
-                    <li><Link to='/'>Home</Link></li>
-                    <li><Link to='/sign-in'>Sign In</Link></li>
-                    <li><Link to='/sign-up'>Sign Up</Link></li>
+                    <li><NavLink to='/' end>Home</NavLink></li>
+                    <li><NavLink to='/sign-in'>Sign In</NavLink></li>
+                    <li><NavLink to='/sign-up'>Sign Up</NavLink></li>
                 </ul>
             )}
         </nav>

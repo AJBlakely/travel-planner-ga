@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router'
+import { useParams, useNavigate, useLocation } from 'react-router'
 import { UserContext } from '../../context/UserContext'
 import * as tripService from '../../services/tripService'
 
 const TripShow = () => {
     const { user } = useContext(UserContext)
     const navigate = useNavigate()
+    const location = useLocation()
     const { tripId } = useParams()
     const [trip, setTrip] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -40,7 +41,7 @@ const TripShow = () => {
         setError(null)
         try {
             await tripService.destroy(tripId)
-            navigate('/trips')
+            navigate('/')
         } catch (err) {
             setError(err.message || 'Unable to delete this trip.')
         } finally {
@@ -84,9 +85,19 @@ const TripShow = () => {
         )
     }
 
+    const tripOwnerId =
+        typeof trip.user === 'string'
+            ? trip.user
+            : trip.user?._id || trip.user?.id
+    const isOwner = tripOwnerId === user._id
+    const fromFeed = location.state?.fromFeed === true
+
     return (
         <main className='dashboard'>
             <h1>{trip.location}</h1>
+            {trip.user?.username ? (
+                <p><strong>Shared by:</strong> {trip.user.username}</p>
+            ) : null}
             <p>
                 {new Date(trip.startDate).toLocaleDateString()} -{' '}
                 {new Date(trip.endDate).toLocaleDateString()}
@@ -97,19 +108,28 @@ const TripShow = () => {
             {trip.tips ? (
                 <p><strong>Tips:</strong> {trip.tips}</p>
             ) : null}
-            <div>
-                <button type='button' onClick={handleEditClick}>
-                    Edit Trip
-                </button>
-                <button
-                    type='button'
-                    onClick={handleDeleteClick}
-                    disabled={isDeleting}
-                    style={{ marginLeft: '1rem', backgroundColor: '#c0392b', color: '#fff' }}
-                >
-                    {isDeleting ? 'Deleting...' : 'Delete Trip'}
-                </button>
-            </div>
+            {isOwner ? (
+                <div>
+                    <button type='button' onClick={handleEditClick}>
+                        Edit Trip
+                    </button>
+                    <button
+                        type='button'
+                        onClick={handleDeleteClick}
+                        disabled={isDeleting}
+                        style={{ marginLeft: '1rem', backgroundColor: '#c0392b', color: '#fff' }}
+                    >
+                        {isDeleting ? 'Deleting...' : 'Delete Trip'}
+                    </button>
+                </div>
+            ) : null}
+            {fromFeed ? (
+                <div style={{ marginTop: '1rem' }}>
+                    <button type='button' onClick={() => navigate('/')}>
+                        Back to Feed
+                    </button>
+                </div>
+            ) : null}
         </main>
     )
 }
