@@ -1,7 +1,11 @@
+//core and framework imports
 const express = require('express')
 const router = express.Router()
 
+//middeware imports
 const verifyToken = require('../middleware/verify-token')
+
+//model imports
 const Trip = require('../models/trip')
 
 
@@ -79,6 +83,23 @@ router.put('/:tripId', verifyToken, async (req, res) => {
 
     await trip.save()
     res.json({ trip })
+  } catch (err) {
+    res.status(500).json({ err: err.message })
+  }
+})
+
+
+// delete
+router.delete('/:tripId', verifyToken, async (req, res) => {
+  try {
+    const trip = await Trip.findById(req.params.tripId)
+    if (!trip) return res.status(404).json({ err: 'trip not found' })
+
+    // Only the owner can delete their trip.
+    if (!isOwner(trip, req.user._id)) return res.status(403).json({ err: 'unauthorized access' })
+
+    await trip.deleteOne()
+    res.status(204).end()
   } catch (err) {
     res.status(500).json({ err: err.message })
   }

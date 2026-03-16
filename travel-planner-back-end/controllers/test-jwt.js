@@ -1,5 +1,8 @@
+//core and framework imports
 const express = require('express')
 const router = express.Router()
+
+//library imports
 const jwt = require('jsonwebtoken')
 
 router.get('/sign-token', (req, res) => {

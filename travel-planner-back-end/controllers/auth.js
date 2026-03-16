@@ -1,7 +1,12 @@
+//Core & framework imports
 const express = require('express')
 const router = express.Router()
+
+//library imports
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
+//model imports
 const User = require('../models/user')
 
 const saltRounds = 12

@@ -1,7 +1,11 @@
+//core and framework import
 const express = require('express')
 const router = express.Router()
+
+//middleware imports
 const verifyToken = require('../middleware/verify-token')
 
+//model imports
 const User = require('../models/user')
 const Trip = require('../models/trip')
 

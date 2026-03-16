@@ -1,16 +1,24 @@
-// require('dns').setServers(['8.8.8.8', '1.1.1.1']);
+// environment configuration
 const dotenv = require('dotenv');
 dotenv.config();
+
+// Core
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
+
+// middleware
 const cors = require('cors');
 const logger = require('morgan');
-const PORT = process.env.PORT || 3000
+
+//Route imports
 const testJwtRouter = require('./controllers/test-jwt')
 const authRouter = require('./controllers/auth')
 const userRouter = require('./controllers/users')
 const tripsRouter = require('./controllers/trips')
+
+//App setup
+const app = express();
+const PORT = process.env.PORT || 3000
 
 mongoose.connect(process.env.MONGODB_URI);
 
