@@ -15,10 +15,24 @@ function isOwner(trip, userId) {
 
 router.get('/', verifyToken, async (req, res) => {
   try {
-    //lists the authenticated user's trips ("all the places I've been in one place").
+    //lists the authenticated user's trips ("all the places I've been in one place")
     const trips = await Trip.find({ user: req.user._id })
       .sort({ startDate: -1 })
       .select('location startDate endDate accommodations tips user comments createdAt updatedAt')
+    res.json({ trips })
+  } catch (err) {
+    res.status(500).json({ err: err.message })
+  }
+})
+
+router.get('/feed', verifyToken, async (req, res) => {
+  try {
+    // Shared feed of all trips so users can discover destinations from other users.
+    const trips = await Trip.find({})
+      .populate('user', 'username')
+      .sort({ createdAt: -1 })
+      .select('location startDate endDate accommodations tips user comments createdAt updatedAt')
+
     res.json({ trips })
   } catch (err) {
     res.status(500).json({ err: err.message })
@@ -65,7 +79,7 @@ router.post('/', verifyToken, async (req, res) => {
 })
 
 
-//update of a trip ("edit any data").
+//update of a trip.
 router.put('/:tripId', verifyToken, async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.tripId)

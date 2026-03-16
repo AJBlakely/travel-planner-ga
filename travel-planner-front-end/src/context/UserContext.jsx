@@ -3,9 +3,14 @@ import { createContext, useState } from "react";
 const UserContext = createContext()
 
 const getUserFromToken = () => {
-    const token = localStorage.getItem('token')
-    if(!token) return null
-    return JSON.parse(atob(token.split('.')[1])).payload
+    try {
+        const token = localStorage.getItem('token')
+        if (!token) return null
+        return JSON.parse(atob(token.split('.')[1])).payload
+    } catch (err) {
+        localStorage.removeItem('token')
+        return null
+    }
 }
 
 function UserProvider({ children }) {
