@@ -5,9 +5,24 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    email: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        sparse: true,
+    },
+    googleId: {
+        type: String,
+        sparse: true,
+    },
+    authProvider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
+    },
     password: {
         type: String,
-        required: true,
+        required: false,
     }
 }, { timestamps: true })
 

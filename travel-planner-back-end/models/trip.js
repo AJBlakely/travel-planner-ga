@@ -16,7 +16,7 @@ const tripSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true,
-        trim: true //useful for auto-populated destinations
+        trim: true 
     },
     accommodations: {
         type: String,
@@ -31,6 +31,14 @@ const tripSchema = new mongoose.Schema({
     },
     tips: {
         type: String
+    },
+    photoUrl: {
+        type: String,
+        trim: true
+    },
+    photoStoragePath: {
+        type: String,
+        trim: true
     },
     // link the trip to the user who created it
     user: {
