@@ -80,7 +80,7 @@ const SignInForm = () => {
         <div>
           <button>Sign In</button>
           <button type='button' onClick={signInWithGoogle}>Sign In With Google</button>
-          <button type='button' onClick={() => navigate('/')}>Cancel</button>
+          <button type='button' className='danger-btn' onClick={() => navigate('/')}>Cancel</button>
         </div>
       </form>
     </main>

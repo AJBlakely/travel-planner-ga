@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { UserContext } from '../../context/UserContext'
 import * as tripService from '../../services/tripService'
@@ -20,6 +20,37 @@ const TripForm = () => {
     })
 
     const [preview, setPreview] = useState(null)
+    const [isLoading, setIsLoading] = useState(isEditMode)
+
+    useEffect(() => {
+        if (!isEditMode) return
+
+        const fetchTrip = async () => {
+            try {
+                const data = await tripService.show(tripId)
+                const trip = data.trip || {}
+
+                setFormData({
+                    location: trip.location || '',
+                    accommodations: trip.accommodations || '',
+                    startDate: trip.startDate ? new Date(trip.startDate).toISOString().slice(0, 10) : '',
+                    endDate: trip.endDate ? new Date(trip.endDate).toISOString().slice(0, 10) : '',
+                    tips: trip.tips || '',
+                    photo: null,
+                })
+
+                if (trip.photoUrl) {
+                    setPreview(trip.photoUrl)
+                }
+            } catch (err) {
+                setMessage(err.message || 'Unable to load trip data.')
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchTrip()
+    }, [isEditMode, tripId])
 
     const handleFileChange = (evt) => {
         const file = evt.target.files[0]
@@ -68,10 +99,11 @@ const TripForm = () => {
     }
 
     if (!user) return <main className='dashboard'><p>Please sign in.</p></main>
+    if (isLoading) return <main className='dashboard'><p>Loading trip...</p></main>
 
     return (
         <main className='dashboard'>
-            <h1>{isEditMode ? 'Edit Trip' : 'Add Trip'}</h1>
+            <h2>{isEditMode ? 'Edit Trip' : 'Add Trip'}</h2>
             <p>{message}</p>
             <form autoComplete='off' onSubmit={handleSubmit}>
                 <div>
@@ -152,7 +184,7 @@ const TripForm = () => {
 
                 <div>
                     <button type='submit'>{isEditMode ? 'Update Trip' : 'Save Trip'}</button>
-                    <button type='button' onClick={handleCancel}>Cancel</button>
+                    <button type='button' className='danger-btn' onClick={handleCancel}>Cancel</button>
                 </div>
             </form>
         </main>

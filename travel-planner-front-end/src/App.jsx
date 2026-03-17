@@ -1,12 +1,11 @@
 //react imports
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 //routing
 import { Route, Routes } from 'react-router'
 //style
 import './App.css'
 //componenets
 import NavBar from './components/NavBar/NavBar'
-import Header from './components/Layout/Header'
 import SignUpForm from './components/SignUpForm/SignUpForm'
 import SignInForm from './components/SignInForm/SignInForm'
 import Landing from './components/Landing/Landing'
@@ -24,6 +23,9 @@ function App() {
 
   return (
     <>
+      <header className='site-header'>
+        <h1>Travel Planner</h1>
+      </header>
       <NavBar />
       <Routes>
         <Route path='/' element={user ? <Feed /> : <Landing />} />

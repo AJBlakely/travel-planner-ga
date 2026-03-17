@@ -57,18 +57,27 @@ const TripsIndex = () => {
     const mappedTrips = trips.map((trip) => {
         const tripId = trip._id || trip.id
         return (
-            <li key={tripId || trip.location}>
+            <li key={tripId || trip.location} className='my-trip-card'>
+                {trip.photoUrl ? (
+                    <img
+                        className='my-trip-photo'
+                        src={trip.photoUrl}
+                        alt={`Trip to ${trip.location}`}
+                    />
+                ) : (
+                    <div className='my-trip-photo my-trip-photo-placeholder'>No Photo</div>
+                )}
                 <strong>
                     {tripId ? (
                         <Link to={`/trips/${tripId}`}>{trip.location}</Link>
                     ) : (
                         trip.location
                     )}
-                </strong>{' '}
-            <span>
-                ({new Date(trip.startDate).toLocaleDateString()} -{' '}
-                {new Date(trip.endDate).toLocaleDateString()})
-            </span>
+                </strong>
+                <span>
+                    {new Date(trip.startDate).toLocaleDateString()} -{' '}
+                    {new Date(trip.endDate).toLocaleDateString()}
+                </span>
             </li>
         )
     })
@@ -79,7 +88,7 @@ const TripsIndex = () => {
             {trips.length === 0 ? (
                 <p>No trips yet. Add your first trip!</p>
             ) : (
-                <ul className='dashboard-list'>
+                <ul className='dashboard-list my-trips-grid'>
                     {mappedTrips}
                 </ul>
             )}

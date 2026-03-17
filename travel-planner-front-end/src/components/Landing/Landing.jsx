@@ -1,7 +1,8 @@
 const Landing = () => {
     return (
-        <main>
-            <h1>Hello you are on the landing page</h1>
+        <main className='dashboard'>
+            <h2>Plan and Share Every Trip</h2>
+            <p>Sign in to create trips, share photos, and explore the feed.</p>
         </main>
     )
 }

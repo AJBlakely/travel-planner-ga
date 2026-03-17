@@ -33,7 +33,6 @@ const UsersList = () => {
     if (!user) {
         return (
         <main className='dashboard'>
-            <h1>Users</h1>
             <p>You need to be signed in to view the list of users.</p>
         </main>
         )
@@ -42,7 +41,6 @@ const UsersList = () => {
     if (isLoading) {
         return (
         <main className='dashboard'>
-            <h1>Users</h1>
             <p>Loading users...</p>
         </main>
         )
@@ -51,7 +49,6 @@ const UsersList = () => {
     if (error) {
         return (
         <main className='dashboard'>
-            <h1>Users</h1>
             <p>{error}</p>
         </main>
         )
@@ -66,7 +63,6 @@ const UsersList = () => {
 
     return (
         <main className='dashboard'>
-            <h1>Users</h1>
             <p>Select a user to view their profile.</p>
             <ul className='dashboard-list'>
                 {mappedUsers}

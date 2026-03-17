@@ -1,12 +1,28 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.25rem 1.5rem 2rem;
   text-align: center;
+}
+
+.site-header {
+  text-align: left;
+  margin-bottom: 0.6rem;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  color: #1f4a73;
+  letter-spacing: 0.01em;
 }
 
 .dashboard {
   text-align: left;
+  background: #fff;
+  border: 1px solid #e7edf3;
+  border-radius: 12px;
+  padding: 1.1rem;
 }
 
 .dashboard-list {
@@ -19,6 +35,49 @@
   display: grid;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.my-trips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.my-trip-card {
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.my-trip-card strong {
+  font-size: 1.05rem;
+}
+
+.my-trip-card span {
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.my-trip-photo {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #eef3f7;
+}
+
+.my-trip-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 
 .feed-card {
@@ -40,6 +99,16 @@
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 0.9rem;
+}
+
+.trip-show-photo {
+  width: 100%;
+  max-width: 680px;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(10, 35, 70, 0.2);
+  margin: 0.5rem 0 1rem;
 }
 
 .feed-title {
@@ -78,12 +147,13 @@ nav {
   position: sticky;
   top: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
   background: #fff;
-  border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  border: 1px solid #e1e8f0;
+  box-shadow: 0 4px 10px rgba(15, 37, 58, 0.05);
 }
 
 nav a {
@@ -100,8 +170,37 @@ nav a:hover {
 }
 
 nav a.active {
-  background: #111;
+  background: #1f4a73;
   color: #fff;
+}
+
+.danger-btn {
+  background: #c62828;
+  color: #fff;
+  border-color: #c62828;
+}
+
+.danger-btn:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+}
+
+@media (max-width: 1100px) {
+  .my-trips-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .my-trips-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .my-trips-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .logo {

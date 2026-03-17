@@ -95,6 +95,13 @@ const TripShow = () => {
     return (
         <main className='dashboard'>
             <h1>{trip.location}</h1>
+            {trip.photoUrl ? (
+                <img
+                    className='trip-show-photo'
+                    src={trip.photoUrl}
+                    alt={`Trip to ${trip.location}`}
+                />
+            ) : null}
             {trip.user?.username ? (
                 <p><strong>Shared by:</strong> {trip.user.username}</p>
             ) : null}
@@ -115,9 +122,10 @@ const TripShow = () => {
                     </button>
                     <button
                         type='button'
+                        className='danger-btn'
                         onClick={handleDeleteClick}
                         disabled={isDeleting}
-                        style={{ marginLeft: '1rem', backgroundColor: '#c0392b', color: '#fff' }}
+                        style={{ marginLeft: '1rem' }}
                     >
                         {isDeleting ? 'Deleting...' : 'Delete Trip'}
                     </button>
