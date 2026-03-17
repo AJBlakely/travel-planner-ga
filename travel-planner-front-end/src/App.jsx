@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router'
 import './App.css'
 //componenets
 import NavBar from './components/NavBar/NavBar'
+import Header from './components/Layout/Header'
 import SignUpForm from './components/SignUpForm/SignUpForm'
 import SignInForm from './components/SignInForm/SignInForm'
 import Landing from './components/Landing/Landing'

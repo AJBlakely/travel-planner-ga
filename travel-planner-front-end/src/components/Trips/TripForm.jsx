@@ -1,14 +1,7 @@
-import { useContext, useState, useEffect, useRef } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import { importLibrary, setOptions } from "@googlemaps/js-api-loader"
 import { UserContext } from '../../context/UserContext'
 import * as tripService from '../../services/tripService'
-
-setOptions({
-    apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    version: "weekly",
-    id: "google-maps-script"
-})
 
 
 const TripForm = () => {
@@ -23,43 +16,21 @@ const TripForm = () => {
         startDate: '',
         endDate: '',
         tips: '',
+        photo: null
     })
 
-    const googleContainerRef = useRef(null)
+    const [preview, setPreview] = useState(null)
 
-    useEffect(() => {
-        const init = async () => {
-            try {
-                // Wait for library to load
-                const { PlaceAutocompleteElement } = await importLibrary("places");
-                
-                const autocomplete = new PlaceAutocompleteElement({
-                    types: ['(cities)'],
-                });
+    const handleFileChange = (evt) => {
+        const file = evt.target.files[0]
+        setFormData({ ...formData, photo: file })
+        
+        // Create a local URL for the preview image
+        if (file) {
+            setPreview(URL.createObjectURL(file))
+        }
+    }
 
-                if (formData.location) {
-                    autocomplete.value = formData.location;
-                }
-
-                autocomplete.addEventListener('gmp-placeselect', async ({ place }) => {
-                    await place.fetchFields({ fields: ['displayName', 'formattedAddress'] });
-                    setFormData(prev => ({ 
-                        ...prev, 
-                        location: place.formattedAddress || place.displayName 
-                    }));
-                });
-
-                if (googleContainerRef.current) {
-                    googleContainerRef.current.innerHTML = ''; 
-                    googleContainerRef.current.appendChild(autocomplete);
-                }
-            } catch (error) {
-                console.error("Maps load error:", error);
-            }
-        };
-
-        init();
-    }, []); 
 
     const handleChange = (evt) => {
         setMessage('')
@@ -69,11 +40,22 @@ const TripForm = () => {
     const handleSubmit = async (evt) => {
         evt.preventDefault()
         try {
+            const data = new FormData()
+            data.append('location', formData.location)
+            data.append('accommodations', formData.accommodations)
+            data.append('startDate', formData.startDate)
+            data.append('endDate', formData.endDate)
+            data.append('tips', formData.tips)
+
+            if (formData.photo instanceof File) {
+                data.append('photo', formData.photo)
+            }
+
             if (isEditMode) {
-                await tripService.update(tripId, formData)
+                await tripService.update(tripId, data)
                 navigate(`/trips/${tripId}`)
             } else {
-                await tripService.create(formData)
+                await tripService.create(data)
                 navigate('/')
             }
         } catch (err) {
@@ -93,26 +75,81 @@ const TripForm = () => {
             <p>{message}</p>
             <form autoComplete='off' onSubmit={handleSubmit}>
                 <div>
-                    <label>Location:</label>
-                    {/* Google will inject the input into this div */}
-                    <div ref={googleContainerRef} className="google-autocomplete-container"></div>
+                    <label htmlFor='location'>Location:</label>
+                    <input
+                        type='text'
+                        id='location'
+                        name='location'
+                        value={formData.location}
+                        onChange={handleChange}
+                        placeholder='City or destination'
+                        required
+                    />
                 </div>
+
                 <div>
                     <label htmlFor='accommodations'>Accommodations:</label>
-                    <input type='text' id='accommodations' name='accommodations' value={formData.accommodations} onChange={handleChange} />
+                    <input
+                        type='text'
+                        id='accommodations'
+                        name='accommodations'
+                        value={formData.accommodations}
+                        onChange={handleChange}
+                    />
                 </div>
+
                 <div>
                     <label htmlFor='startDate'>Start Date:</label>
-                    <input type='date' id='startDate' name='startDate' value={formData.startDate} onChange={handleChange} required />
+                    <input
+                        type='date'
+                        id='startDate'
+                        name='startDate'
+                        value={formData.startDate}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
+
                 <div>
                     <label htmlFor='endDate'>End Date:</label>
-                    <input type='date' id='endDate' name='endDate' value={formData.endDate} onChange={handleChange} required />
+                    <input
+                        type='date'
+                        id='endDate'
+                        name='endDate'
+                        value={formData.endDate}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
+
                 <div>
                     <label htmlFor='tips'>Tips/Recommendations:</label>
-                    <textarea id='tips' name='tips' value={formData.tips} onChange={handleChange} rows='4' />
+                    <textarea
+                        id='tips'
+                        name='tips'
+                        value={formData.tips}
+                        onChange={handleChange}
+                        rows='4'
+                    />
                 </div>
+                
+                {/* 4. Add the Photo Input Field */}
+                <div>
+                    <label htmlFor='photo'>Trip Photo:</label>
+                    <input 
+                        type='file' 
+                        id='photo' 
+                        name='photo' 
+                        accept='image/*' 
+                        onChange={handleFileChange} 
+                    />
+                    {preview && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img src={preview} alt="Preview" style={{ width: '100px', borderRadius: '8px' }} />
+                        </div>
+                    )}
+                </div>
+
                 <div>
                     <button type='submit'>{isEditMode ? 'Update Trip' : 'Save Trip'}</button>
                     <button type='button' onClick={handleCancel}>Cancel</button>

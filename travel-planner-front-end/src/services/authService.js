@@ -7,6 +7,11 @@ const decodeJwtPayload = (token) => {
     return JSON.parse(atob(padded)).payload
 }
 
+const setSessionFromToken = (token) => {
+    localStorage.setItem('token', token)
+    return decodeJwtPayload(token)
+}
+
 const signUp = async (formData) => {
     try {
         const res = await fetch(`${BASE_URL}/sign-up`, {
@@ -22,8 +27,7 @@ const signUp = async (formData) => {
         }
 
         if(data.token) {
-            localStorage.setItem('token', data.token)
-            return decodeJwtPayload(data.token)
+            return setSessionFromToken(data.token)
         }
 
         throw new Error('invalid response from server')
@@ -47,8 +51,7 @@ const signIn = async (formData) => {
         }
 
         if(data.token) {
-            localStorage.setItem('token', data.token)
-            return decodeJwtPayload(data.token)
+            return setSessionFromToken(data.token)
         }
     } catch (err) {
         console.log(err)
@@ -56,7 +59,13 @@ const signIn = async (formData) => {
     }
 }
 
+const signInWithGoogle = () => {
+    window.location.assign(`${BASE_URL}/google`)
+}
+
 export {
     signUp,
-    signIn
+    signIn,
+    signInWithGoogle,
+    setSessionFromToken
 }
