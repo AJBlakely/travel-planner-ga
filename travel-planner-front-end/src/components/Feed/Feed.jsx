@@ -50,6 +50,13 @@ const Feed = () => {
 
         return (
             <li key={tripId} className='feed-card'>
+                {trip.photoUrl ? (
+                    <img
+                        className='feed-photo'
+                        src={trip.photoUrl}
+                        alt={`Trip to ${trip.location}`}
+                    />
+                ) : null}
                 <h2 className='feed-title'>
                     Trip to {trip.location}
                 </h2>

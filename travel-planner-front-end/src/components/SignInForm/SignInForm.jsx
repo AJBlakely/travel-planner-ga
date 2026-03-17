@@ -1,7 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { signIn } from '../../services/authService';
+import { signIn, signInWithGoogle, setSessionFromToken } from '../../services/authService';
 
 import { UserContext } from '../../context/UserContext'
 
@@ -13,6 +13,21 @@ const SignInForm = () => {
     username: '',
     password: '',
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('token')
+
+    if (!token) return
+
+    try {
+      const signedInUser = setSessionFromToken(token)
+      setUser(signedInUser)
+      navigate('/', { replace: true })
+    } catch (err) {
+      setMessage('Google sign-in failed. Please try again.')
+    }
+  }, [navigate, setUser])
 
   const handleChange = (evt) => {
     setMessage('');
@@ -64,7 +79,8 @@ const SignInForm = () => {
         </div>
         <div>
           <button>Sign In</button>
-          <button onClick={() => navigate('/')}>Cancel</button>
+          <button type='button' onClick={signInWithGoogle}>Sign In With Google</button>
+          <button type='button' onClick={() => navigate('/')}>Cancel</button>
         </div>
       </form>
     </main>

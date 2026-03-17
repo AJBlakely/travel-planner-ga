@@ -1,11 +1,14 @@
 import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { UserContext } from '../../context/UserContext'
 import * as tripService from '../../services/tripService'
+
 
 const TripForm = () => {
     const { user } = useContext(UserContext)
     const navigate = useNavigate()
+    const { tripId } = useParams()
+    const isEditMode = Boolean(tripId)
     const [message, setMessage] = useState('')
     const [formData, setFormData] = useState({
         location: '',
@@ -13,7 +16,21 @@ const TripForm = () => {
         startDate: '',
         endDate: '',
         tips: '',
+        photo: null
     })
+
+    const [preview, setPreview] = useState(null)
+
+    const handleFileChange = (evt) => {
+        const file = evt.target.files[0]
+        setFormData({ ...formData, photo: file })
+        
+        // Create a local URL for the preview image
+        if (file) {
+            setPreview(URL.createObjectURL(file))
+        }
+    }
+
 
     const handleChange = (evt) => {
         setMessage('')
@@ -23,25 +40,38 @@ const TripForm = () => {
     const handleSubmit = async (evt) => {
         evt.preventDefault()
         try {
-            await tripService.create(formData)
-            navigate('/')
+            const data = new FormData()
+            data.append('location', formData.location)
+            data.append('accommodations', formData.accommodations)
+            data.append('startDate', formData.startDate)
+            data.append('endDate', formData.endDate)
+            data.append('tips', formData.tips)
+
+            if (formData.photo instanceof File) {
+                data.append('photo', formData.photo)
+            }
+
+            if (isEditMode) {
+                await tripService.update(tripId, data)
+                navigate(`/trips/${tripId}`)
+            } else {
+                await tripService.create(data)
+                navigate('/')
+            }
         } catch (err) {
             setMessage(err.message || 'Unable to save trip.')
         }
     }
 
-    if (!user) {
-        return (
-            <main className='dashboard'>
-                <h1>Add Trip</h1>
-                <p>You need to be signed in to add a trip.</p>
-            </main>
-        )
+    const handleCancel = () => {
+        navigate(isEditMode ? `/trips/${tripId}` : '/')
     }
+
+    if (!user) return <main className='dashboard'><p>Please sign in.</p></main>
 
     return (
         <main className='dashboard'>
-            <h1>Add Trip</h1>
+            <h1>{isEditMode ? 'Edit Trip' : 'Add Trip'}</h1>
             <p>{message}</p>
             <form autoComplete='off' onSubmit={handleSubmit}>
                 <div>
@@ -52,9 +82,11 @@ const TripForm = () => {
                         name='location'
                         value={formData.location}
                         onChange={handleChange}
+                        placeholder='City or destination'
                         required
                     />
                 </div>
+
                 <div>
                     <label htmlFor='accommodations'>Accommodations:</label>
                     <input
@@ -65,6 +97,7 @@ const TripForm = () => {
                         onChange={handleChange}
                     />
                 </div>
+
                 <div>
                     <label htmlFor='startDate'>Start Date:</label>
                     <input
@@ -76,6 +109,7 @@ const TripForm = () => {
                         required
                     />
                 </div>
+
                 <div>
                     <label htmlFor='endDate'>End Date:</label>
                     <input
@@ -87,6 +121,7 @@ const TripForm = () => {
                         required
                     />
                 </div>
+
                 <div>
                     <label htmlFor='tips'>Tips/Recommendations:</label>
                     <textarea
@@ -97,13 +132,32 @@ const TripForm = () => {
                         rows='4'
                     />
                 </div>
+                
+                {/* 4. Add the Photo Input Field */}
                 <div>
-                    <button type='submit'>Save Trip</button>
-                    <button type='button' onClick={() => navigate('/')}>Cancel</button>
+                    <label htmlFor='photo'>Trip Photo:</label>
+                    <input 
+                        type='file' 
+                        id='photo' 
+                        name='photo' 
+                        accept='image/*' 
+                        onChange={handleFileChange} 
+                    />
+                    {preview && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img src={preview} alt="Preview" style={{ width: '100px', borderRadius: '8px' }} />
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <button type='submit'>{isEditMode ? 'Update Trip' : 'Save Trip'}</button>
+                    <button type='button' onClick={handleCancel}>Cancel</button>
                 </div>
             </form>
         </main>
     )
 }
+
 
 export default TripForm
