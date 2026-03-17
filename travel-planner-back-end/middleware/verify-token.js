@@ -3,10 +3,23 @@ const jwt = require('jsonwebtoken')
 
 function verifyToken (req, res, next) {
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const authHeader = req.headers.authorization
+        const token = authHeader && authHeader.startsWith('Bearer ')
+            ? authHeader.split(' ')[1]
+            : null
 
-        req.user = decoded.payload
+        if (!token) {
+            return res.status(401).json({ err: 'missing token' })
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const payload = decoded.payload || decoded.user
+
+        if (!payload || !payload._id) {
+            return res.status(401).json({ err: 'invalid token payload' })
+        }
+
+        req.user = payload
 
         next()
     } catch (err) {

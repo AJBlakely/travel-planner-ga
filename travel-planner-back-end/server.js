@@ -21,10 +21,12 @@ const tripsRouter = require('./controllers/trips')
 const app = express();
 const PORT = process.env.PORT || 3000
 
-mongoose.connect(process.env.MONGODB_URI);
-
 mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err.message);
 });
 
 const oauth2Client = new google.auth.OAuth2(
@@ -42,10 +44,16 @@ app.use('/test-jwt', testJwtRouter)
 app.use('/auth', authRouter)
 app.use('/users', userRouter)
 app.use('/trips', tripsRouter)
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    app.listen(PORT, () => {
+      console.log(`Listening on port: ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err.message);
+    process.exit(1);
+  }
+}
 
-
-
-
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});
+startServer();
