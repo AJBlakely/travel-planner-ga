@@ -12,3 +12,9 @@ JWT Authentication,
 Google Cloud (for images),
 Netlify (front‑end deployment),
 Heroku (Back-End Deployment)
+
+Stretch Goals:
+More trip details,
+Map Api,
+Export trip to PDF or shareable link,
+More granular privacy controls,
