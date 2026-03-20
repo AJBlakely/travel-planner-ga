@@ -5,10 +5,10 @@ Travel Planner is our take on a social, collaborative travel‑planning app. It 
 Check out the app here: https://travel-planner-ga.netlify.app/
 
 Technologies used:
-React (Vite)
-Node.js + Express
-MongoDB + Mongoose
-JWT Authentication
-Google Cloud (for images)
-Netlify (front‑end deployment)
+React (Vite),
+Node.js + Express,
+MongoDB + Mongoose,
+JWT Authentication,
+Google Cloud (for images),
+Netlify (front‑end deployment),
 Heroku (Back-End Deployment)
